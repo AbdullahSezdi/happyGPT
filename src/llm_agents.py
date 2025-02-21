@@ -421,7 +421,7 @@ class MultiAgentSystem:
 def load_dataset():
     try:
         # Veri yükleme kodunuz buraya
-        df = pd.read_csv("cleaned_dataset.csv")  # Gerçek path'i kullanın
+        df = pd.read_csv("src/cleaned_dataset.csv")  # Gerçek path'i kullanın
         return df
     except Exception as e:
      
