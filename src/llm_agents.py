@@ -421,7 +421,7 @@ class MultiAgentSystem:
 def load_dataset():
     try:
         # Veri yükleme kodunuz buraya
-        df = pd.read_csv("src/cleaned_dataset.csv")  # Gerçek path'i kullanın
+        df = pd.read_csv("cleaned_dataset.csv")  # Gerçek path'i kullanın
         return df
     except Exception as e:
         st.error(f"Veri yüklenirken hata oluştu: {str(e)}")
@@ -437,3 +437,5 @@ if 'df' not in st.session_state:
 
 if 'df' in st.session_state and 'multi_agent_system' not in st.session_state:
     st.session_state.multi_agent_system = MultiAgentSystem(st.session_state.df)
+
+

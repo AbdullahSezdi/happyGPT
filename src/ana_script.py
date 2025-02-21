@@ -24,7 +24,7 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 def load_data():
     """Veri setini yükle ve önbellekle"""
     try:
-        df = pd.read_csv('src/cleaned_dataset.csv')
+        df = pd.read_csv('cleaned_dataset.csv')
         return df
     except Exception as e:
         st.error(f"Veri yüklenirken hata oluştu: {str(e)}")
@@ -422,63 +422,148 @@ def main():
     st.set_page_config(
         page_title="Global Mutluluk Analisi",
         page_icon="🌍",
-        layout="centered"  # wide yerine centered kullanıyoruz
+        layout="centered"  # Tam genişlik için wide kullanıyoruz
     )
 
     # Özel CSS Stilleri
     st.markdown("""
     <style>
-        /* Streamlit container override */
-        .block-container {
-            padding-top: 1rem;
-            padding-bottom: 0rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
+        /* Ana Tema Değişkenleri */
+        :root {
+            --background-primary: #0F0F0F;
+            --background-secondary: #121212;
+            --accent-color: #007AFF;
+            --accent-gradient: linear-gradient(135deg, rgba(170, 0, 255, 0.9) 0%, rgba(0, 122, 255, 0.9) 50%, rgba(0, 255, 231, 0.9) 100%);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --card-background: rgba(18, 18, 18, 0.8);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-hover-border: rgba(0, 122, 255, 0.5);
         }
 
-        /* Streamlit varsayılan margin override */
-        .main > div {
-            padding: 0;
-            margin: 0;
+        /* Genel Stiller */
+        .main {
+            background: linear-gradient(135deg, #0A0A0A 0%, #1C1C1C 100%);
+            color: var(--text-primary);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
         }
 
-        /* Ana container stil */
-        .qa-container {
-            width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Üst navigasyon butonları */
-        .nav-buttons {
-            display: flex;
-            gap: 1rem;
+        /* Hero Section */
+        .hero-section {
+            background: var(--background-primary);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
             margin-bottom: 2rem;
-            justify-content: center;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .nav-button {
-            background: rgba(0, 198, 255, 0.1);
-            border: 1px solid rgba(0, 198, 255, 0.2);
-            padding: 0.5rem 2rem;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(0, 122, 255, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #00FFE7 0%, #007AFF 50%, #AA00FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 198, 255, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        /* Dashboard Kartları */
+        .dashboard-card {
+            background: var(--card-background);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             transition: all 0.3s ease;
         }
 
-        .nav-button:hover {
-            background: rgba(0, 198, 255, 0.2);
+        .dashboard-card:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 122, 255, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        /* Parla Sayfası Stilleri */
+        .qa-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Spinner mesajını ortalama */
+        .spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            height: 100vh;
+        }
+
+        /* Info card */
+        .info-card {
+            background: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
+        }
+
+        /* Chat message */
+        .chat-message {
+            background: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .chat-message:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
         }
 
         /* Input alanı */
         .stTextArea textarea {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border-radius: 10px !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            padding: 15px !important;
-            color: white !important;
+            background: var(--card-background) !important;
+            border: 1px solid var(--card-border) !important;
+            border-radius: 12px !important;
+            padding: 1.5rem !important;
+            color: var(--text-primary) !important;
             height: 120px !important;
             transition: all 0.3s ease !important;
             font-size: 1rem !important;
@@ -487,71 +572,178 @@ def main():
         }
 
         .stTextArea textarea:hover {
-            border-color: rgba(0, 198, 255, 0.3) !important;
-            background: rgba(255, 255, 255, 0.05) !important;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+            border-color: var(--accent-color) !important;
+            transform: translateY(-2px);
         }
 
         .stTextArea textarea:focus {
-            border-color: #00c6ff !important;
+            border-color: var(--accent-color) !important;
             background: rgba(255, 255, 255, 0.07) !important;
-            box-shadow: 0 4px 12px rgba(0, 198, 255, 0.1) !important;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.1) !important;
             outline: none !important;
         }
 
-        /* Gönder butonu */
-        .stButton button {
-            background: linear-gradient(90deg, #00c6ff, #0072ff) !important;
+        /* Butonlar */
+        .stButton > button {
+            background: var(--accent-gradient) !important;
+            color: white !important;
             border: none !important;
             padding: 0.8rem 2rem !important;
-            color: white !important;
-            width: 100% !important;
-            border-radius: 8px !important;
-            margin-top: 1rem !important;
-            font-size: 1rem !important;
+            border-radius: 12px !important;
             font-weight: 500 !important;
             letter-spacing: 0.5px !important;
             text-transform: uppercase !important;
             transition: all 0.3s ease !important;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+            width: 100% !important;
         }
 
-        .stButton button:hover {
-            background: linear-gradient(90deg, #0072ff, #00c6ff) !important;
+        .stButton > button:hover {
             transform: translateY(-2px) !important;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+            box-shadow: 0 8px 16px rgba(170, 0, 255, 0.2) !important;
         }
 
-        .stButton button:active {
-            transform: translateY(0) !important;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        /* Metrikler */
+        .metric-container {
+            background: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        /* Info card */
-        .info-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 1rem;
+        .metric-container:hover {
+            border-color: var(--card-hover-border);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 122, 255, 0.1);
         }
 
-        /* Chat message */
-        .chat-message {
-            background: rgba(0, 198, 255, 0.05);
-            border: 1px solid rgba(0, 198, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 1rem;
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
         }
 
+        .metric-label {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-score {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        /* Grafikler için container */
+        .chart-container {
+            background: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .chart-container:hover {
+            border-color: var(--card-hover-border);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 122, 255, 0.1);
+        }
+
+        /* Tab stilleri */
+        .stTabs [data-baseweb="tab-list"] {
+            background-color: transparent !important;
+            border-radius: 12px !important;
+            gap: 1rem;
+        }
+
+        .stTabs [data-baseweb="tab"] {
+            background-color: var(--card-background) !important;
+            border-radius: 12px !important;
+            border: 1px solid var(--card-border) !important;
+            color: var(--text-primary) !important;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .stTabs [data-baseweb="tab"]:hover {
+            border-color: var(--accent-color) !important;
+            transform: translateY(-2px);
+        }
+
+        .stTabs [data-baseweb="tab"][aria-selected="true"] {
+            background: var(--accent-gradient) !important;
+            border: none !important;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-gradient);
+        }
+
+        /* Responsive Tasarım */
         @media (max-width: 768px) {
             .qa-container {
-                width: 100%;
-                padding: 10px;
+                padding: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .metric-value {
+                font-size: 2rem;
+            }
+            
+            .metric-label {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.25rem;
+            }
+            
+            .chart-container {
+                padding: 1rem;
             }
         }
     </style>
+    """, unsafe_allow_html=True)
+
+    # Hero Section
+    st.markdown("""
+        <div class="hero-section">
+            <h1 class="hero-title">Dünya Mutluluk Analizi</h1>
+            <p class="hero-subtitle">Küresel mutluluk verilerini keşfedin ve ülkeler arasındaki ilişkileri analiz edin</p>
+        </div>
     """, unsafe_allow_html=True)
 
     try:
@@ -638,75 +830,125 @@ def main():
                 
                 map_data['country_name'] = map_data['country_name'].replace(country_name_mapping)
 
+                # Grafik renk paleti ve tema ayarları
+                CHART_THEME = {
+                    'paper_bgcolor': 'rgba(0,0,0,0)',
+                    'plot_bgcolor': 'rgba(0,0,0,0)',
+                    'font': {'color': '#FFFFFF'},
+                    'title': {
+                        'font': {'size': 24, 'color': '#FFFFFF'},
+                        'x': 0.5,
+                        'y': 0.95,
+                        'xanchor': 'center',
+                        'yanchor': 'top'
+                    },
+                    'xaxis': {
+                        'gridcolor': 'rgba(255,255,255,0.1)',
+                        'zerolinecolor': 'rgba(255,255,255,0.2)',
+                        'titlefont': {'color': '#FFFFFF'},
+                        'tickfont': {'color': '#FFFFFF'}
+                    },
+                    'yaxis': {
+                        'gridcolor': 'rgba(255,255,255,0.1)',
+                        'zerolinecolor': 'rgba(255,255,255,0.2)',
+                        'titlefont': {'color': '#FFFFFF'},
+                        'tickfont': {'color': '#FFFFFF'}
+                    }
+                }
+
+                # Harita görselleştirmesi için renk paleti
+                MAP_COLOR_SCALE = [
+                    [0, 'rgba(255,0,0,0.8)'],     # En düşük - Kırmızı
+                    [0.5, 'rgba(255,165,0,0.8)'], # Orta - Turuncu
+                    [1, 'rgba(0,255,127,0.8)']    # En yüksek - Yeşil
+                ]
+
                 # Harita görselleştirmesi
                 fig = go.Figure(data=go.Choropleth(
                     locations=map_data['country_name'],
                     locationmode='country names',
                     z=map_data['life_ladder'],
                     text=map_data['country_name'],
-                    colorscale=[
-                        [0, 'rgb(255,50,50)'],     # Kırmızı (en düşük)
-                        [0.5, 'rgb(255,255,200)'],  # Açık sarı (orta)
-                        [1, 'rgb(50,150,50)']      # Yeşil (en yüksek)
-                    ],
+                    colorscale=MAP_COLOR_SCALE,
                     colorbar_title="Mutluluk<br>Skoru",
                     hovertemplate='<b>%{text}</b><br>Mutluluk Skoru: %{z:.2f}<extra></extra>'
                 ))
 
                 # Harita düzeni
                 fig.update_layout(
-                    title=dict(
-                        text=f"Dünya Mutluluk Haritası ({year_text})",
-                        x=0.5,
-                        y=0.95,
-                        xanchor='center',
-                        yanchor='top',
-                        font=dict(size=20, color='white')
-                    ),
+                    **CHART_THEME,
                     geo=dict(
                         showframe=False,
                         showcoastlines=True,
                         projection_type='equirectangular',
-                        coastlinecolor='rgba(255, 255, 255, 0.5)',
+                        coastlinecolor='rgba(255, 255, 255, 0.3)',
                         showland=True,
-                        landcolor='rgba(200, 200, 200, 0.1)',
+                        landcolor='rgba(255, 255, 255, 0.05)',
                         bgcolor='rgba(0,0,0,0)'
                     ),
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    plot_bgcolor='rgba(0,0,0,0)',
                     height=600,
                     margin=dict(l=0, r=0, t=50, b=0)
+                )
+
+                # Başlığı ayrıca güncelle
+                fig.update_layout(
+                    title_text=f"Dünya Mutluluk Haritası ({year_text})"
                 )
 
                 # Haritayı göster
                 st.plotly_chart(fig, use_container_width=True)
 
-                # İstatistikler
+                # Metrik kartları için container
+                st.markdown('<div class="dashboard-metrics">', unsafe_allow_html=True)
                 col1, col2, col3 = st.columns(3)
+                
                 with col1:
-                    st.metric(
-                        "En Mutlu Ülke",
-                        f"{map_data.nlargest(1, 'life_ladder')['country_name'].iloc[0]}",
-                        f"{map_data.nlargest(1, 'life_ladder')['life_ladder'].iloc[0]:.2f}"
-                    )
+                    st.markdown("""
+                        <div class="metric-container">
+                            <div class="metric-value">{}</div>
+                            <div class="metric-label">En Mutlu Ülke</div>
+                            <div class="metric-score">{:.2f}</div>
+                        </div>
+                    """.format(
+                        map_data.nlargest(1, 'life_ladder')['country_name'].iloc[0],
+                        map_data.nlargest(1, 'life_ladder')['life_ladder'].iloc[0]
+                    ), unsafe_allow_html=True)
+                
                 with col2:
-                    st.metric(
-                        "Global Ortalama",
-                        f"{map_data['life_ladder'].mean():.2f}",
-                        f"±{map_data['life_ladder'].std():.2f} std"
-                    )
+                    st.markdown("""
+                        <div class="metric-container">
+                            <div class="metric-value">{:.2f}</div>
+                            <div class="metric-label">Global Ortalama</div>
+                            <div class="metric-score">±{:.2f} std</div>
+                        </div>
+                    """.format(
+                        map_data['life_ladder'].mean(),
+                        map_data['life_ladder'].std()
+                    ), unsafe_allow_html=True)
+                
                 with col3:
-                    st.metric(
-                        "En Mutsuz Ülke",
-                        f"{map_data.nsmallest(1, 'life_ladder')['country_name'].iloc[0]}",
-                        f"{map_data.nsmallest(1, 'life_ladder')['life_ladder'].iloc[0]:.2f}"
-                    )
+                    st.markdown("""
+                        <div class="metric-container">
+                            <div class="metric-value">{}</div>
+                            <div class="metric-label">En Mutsuz Ülke</div>
+                            <div class="metric-score">{:.2f}</div>
+                        </div>
+                    """.format(
+                        map_data.nsmallest(1, 'life_ladder')['country_name'].iloc[0],
+                        map_data.nsmallest(1, 'life_ladder')['life_ladder'].iloc[0]
+                    ), unsafe_allow_html=True)
+                
+                st.markdown('</div>', unsafe_allow_html=True)
 
                 # Bölümler arası boşluk
                 st.markdown("<div style='margin: 3rem 0;'></div>", unsafe_allow_html=True)
 
                 # Bölgesel Mutluluk Ortalamaları
-                st.markdown("### 🌍 Bölgesel Mutluluk Ortalamaları")
+                st.markdown("""
+                    <div class="chart-container">
+                        <h3 class="section-title">🌍 Bölgesel Mutluluk Ortalamaları</h3>
+                    </div>
+                """, unsafe_allow_html=True)
                 
                 # Bölgesel ortalamaları hesapla
                 if selected_year != 'Tümü':
@@ -717,210 +959,237 @@ def main():
                     year_text = "Tüm Yıllar"
                 
                 # Ortalamalara göre sırala
-                regional_avg = regional_avg.sort_values('life_ladder', ascending=True)
+                regional_avg = regional_avg.sort_values('life_ladder', ascending=False)
                 
                 # Bar chart oluştur
                 fig_regional = go.Figure()
-                
-                # Renk skalası oluştur
-                colors = [
-                    f'rgb({int(255 - (i * (255-50)/(len(regional_avg)-1)))}, '
-                    f'{int(50 + (i * (150-50)/(len(regional_avg)-1)))}, 50)'
-                    for i in range(len(regional_avg))
+
+                # Renk skalası
+                happiness_colors = [
+                    [0, 'rgba(255,0,0,0.8)'],     # Kırmızı (en mutsuz)
+                    [0.5, 'rgba(255,165,0,0.8)'], # Turuncu (orta)
+                    [1, 'rgba(0,255,127,0.8)']    # Yeşil (en mutlu)
                 ]
                 
                 fig_regional.add_trace(go.Bar(
                     y=regional_avg['regional_indicator'],
                     x=regional_avg['life_ladder'],
                     orientation='h',
-                    marker_color=colors,
+                    marker=dict(
+                        color=regional_avg['life_ladder'],
+                        colorscale=happiness_colors
+                    ),
                     text=regional_avg['life_ladder'].round(2),
-                    textposition='auto'
+                    textposition='auto',
+                    hovertemplate='<b>%{y}</b><br>Mutluluk Skoru: %{x:.2f}<extra></extra>'
                 ))
                 
+                # Bölgesel trend grafiği düzeni
                 fig_regional.update_layout(
-                    title=dict(
-                        text=f"Bölgesel Mutluluk Ortalamaları ({year_text})",
+                    **CHART_THEME,
+                    xaxis_title="Yıl",
+                    yaxis_title="Mutluluk Skoru",
+                    hovermode='x unified',
+                    height=600,
+                    showlegend=True,
+                    title={
+                        'text': "Bölgesel Mutluluk Trendleri",
+                        'y': 0.95,  # Title'ı biraz yukarı taşı
+                        'x': 0.5,
+                        'xanchor': 'center',
+                        'yanchor': 'top',
+                        'font': {'size': 24}
+                    },
+                    legend=dict(
+                        orientation="h",
+                        yanchor="bottom",
+                        y=1.15,  # Legend'i title'ın üzerine taşı
+                        xanchor="center",
                         x=0.5,
-                        y=0.95,
-                        xanchor='center',
-                        yanchor='top',
-                        font=dict(size=20, color='white')
+                        bgcolor="rgba(0,0,0,0)",
+                        bordercolor="rgba(255,255,255,0.2)",
+                        font=dict(size=10)
                     ),
-                    xaxis_title="Mutluluk Skoru",
-                    yaxis_title=None,
-                    template="plotly_dark",
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    height=400,
-                    margin=dict(l=0, r=0, t=50, b=0),
-                    showlegend=False,
-                    xaxis=dict(
-                        showgrid=True,
-                        gridwidth=1,
-                        gridcolor='rgba(128, 128, 128, 0.2)'
-                    ),
-                    yaxis=dict(
-                        showgrid=False
-                    )
+                    margin=dict(t=150)  # Üst marjini arttır
                 )
-                
+
                 st.plotly_chart(fig_regional, use_container_width=True)
                 
-                # Bölgesel içgörüler
+                # En mutlu/mutsuz bölge metriklerini göster
                 col1, col2 = st.columns(2)
-                with col1:
-                    st.info(f"""
-                    **En Mutlu Bölge**: {regional_avg.iloc[-1]['regional_indicator']}
-                    - Ortalama Skor: {regional_avg.iloc[-1]['life_ladder']:.2f}
-                    """)
-                with col2:
-                    st.warning(f"""
-                    **En Mutsuz Bölge**: {regional_avg.iloc[0]['regional_indicator']}
-                    - Ortalama Skor: {regional_avg.iloc[0]['life_ladder']:.2f}
-                    """)
-
-                # Bölümler arası boşluk
-                st.markdown("<div style='margin: 3rem 0;'></div>", unsafe_allow_html=True)
-
-                # En Mutlu ve En Mutsuz 10 Ülke
-                st.markdown("### 🌟 En Mutlu ve En Mutsuz 10 Ülke")
                 
-                # Verileri hazırla
+                with col1:
+                    happiest_region = regional_avg.iloc[0]  # En yüksek skor (ascending=False olduğu için ilk eleman)
+                    st.markdown(f"""
+                        <div class="metric-container">
+                            <div class="metric-value">{happiest_region['regional_indicator']}</div>
+                            <div class="metric-label">En Mutlu Bölge</div>
+                            <div class="metric-score">Ortalama Skor: {happiest_region['life_ladder']:.2f}</div>
+                        </div>
+                    """, unsafe_allow_html=True)
+                
+                with col2:
+                    unhappiest_region = regional_avg.iloc[-1]  # En düşük skor (ascending=False olduğu için son eleman)
+                    st.markdown(f"""
+                        <div class="metric-container">
+                            <div class="metric-value">{unhappiest_region['regional_indicator']}</div>
+                            <div class="metric-label">En Mutsuz Bölge</div>
+                            <div class="metric-score">Ortalama Skor: {unhappiest_region['life_ladder']:.2f}</div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                # En mutlu 10 ülke grafiği
+                st.markdown("""
+                    <div class="chart-container">
+                        <h3 class="section-title">🏆 En Mutlu 10 Ülke</h3>
+                    </div>
+                """, unsafe_allow_html=True)
+
+                # En mutlu 10 ülkeyi seç
                 if selected_year != 'Tümü':
-                    top_10 = df[df['year'] == selected_year].nlargest(10, 'life_ladder')[['country_name', 'life_ladder', 'regional_indicator']]
-                    bottom_10 = df[df['year'] == selected_year].nsmallest(10, 'life_ladder')[['country_name', 'life_ladder', 'regional_indicator']]
-                    comparison_title = f"En Mutlu ve En Mutsuz 10 Ülke ({selected_year})"
+                    top_10 = df[df['year'] == selected_year].nlargest(10, 'life_ladder')
                 else:
-                    # Tüm yılların ortalamasını al
-                    avg_happiness = df.groupby('country_name')['life_ladder'].mean().reset_index()
-                    # Bölge bilgisini ekle (en son yılın bölge bilgisini kullan)
-                    latest_year = df['year'].max()
-                    region_info = df[df['year'] == latest_year][['country_name', 'regional_indicator']].drop_duplicates()
-                    avg_happiness = avg_happiness.merge(region_info, on='country_name')
-                    
-                    top_10 = avg_happiness.nlargest(10, 'life_ladder')[['country_name', 'life_ladder', 'regional_indicator']]
-                    bottom_10 = avg_happiness.nsmallest(10, 'life_ladder')[['country_name', 'life_ladder', 'regional_indicator']]
-                    comparison_title = "En Mutlu ve En Mutsuz 10 Ülke (Tüm Yılların Ortalaması)"
+                    top_10 = df.groupby('country_name')['life_ladder'].mean().nlargest(10).reset_index()
 
-                # Görselleştirme için iki sütun oluştur
-                col1, col2 = st.columns(2)
+                # Mutluluk skoruna göre azalan sırada sırala (en mutlu en üstte olacak)
+                top_10 = top_10.sort_values('life_ladder', ascending=False)
+
+                # Top 10 grafiği
+                fig_top = go.Figure()
                 
-                with col1:
-                    # En mutlu 10 ülke grafiği
-                    fig_top = go.Figure()
-                    fig_top.add_trace(go.Bar(
-                        y=top_10['country_name'],
-                        x=top_10['life_ladder'],
-                        orientation='h',
-                        marker_color='rgb(50,150,50)',  # Yeşil
-                        text=top_10['life_ladder'].round(2),
-                        textposition='auto',
-                        hovertemplate='<b>%{y}</b><br>Mutluluk Skoru: %{x:.2f}<extra></extra>'
-                    ))
-                    
-                    fig_top.update_layout(
-                        title=dict(
-                            text="En Mutlu 10 Ülke",
-                            x=0.5,
-                            y=0.95,
-                            xanchor='center',
-                            yanchor='top',
-                            font=dict(size=16, color='white')
-                        ),
-                        xaxis_title="Mutluluk Skoru",
-                        yaxis_title=None,
-                        template="plotly_dark",
-                        plot_bgcolor='rgba(0,0,0,0)',
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        height=400,
-                        margin=dict(l=0, r=0, t=50, b=0),
-                        showlegend=False,
-                        xaxis=dict(
-                            showgrid=True,
-                            gridwidth=1,
-                            gridcolor='rgba(128, 128, 128, 0.2)'
-                        ),
-                        yaxis=dict(
-                            showgrid=False,
-                            autorange="reversed"  # En yüksek değeri en üstte göster
-                        )
-                    )
-                    st.plotly_chart(fig_top, use_container_width=True)
+                # En mutlu 10 ülke için yeşil tonları
+                happy_color_scale = [
+                    [0, 'rgba(0,100,0,0.8)'],     # Koyu yeşil
+                    [0.5, 'rgba(0,180,0,0.8)'],   # Orta yeşil
+                    [1, 'rgba(0,255,127,0.8)']    # Parlak yeşil
+                ]
                 
-                with col2:
-                    # En mutsuz 10 ülke grafiği
-                    fig_bottom = go.Figure()
-                    fig_bottom.add_trace(go.Bar(
-                        y=bottom_10['country_name'],
-                        x=bottom_10['life_ladder'],
-                        orientation='h',
-                        marker_color='rgb(255,50,50)',  # Kırmızı
-                        text=bottom_10['life_ladder'].round(2),
-                        textposition='auto',
-                        hovertemplate='<b>%{y}</b><br>Mutluluk Skoru: %{x:.2f}<extra></extra>'
-                    ))
-                    
-                    fig_bottom.update_layout(
-                        title=dict(
-                            text="En Mutsuz 10 Ülke",
-                            x=0.5,
-                            y=0.95,
-                            xanchor='center',
-                            yanchor='top',
-                            font=dict(size=16, color='white')
-                        ),
-                        xaxis_title="Mutluluk Skoru",
-                        yaxis_title=None,
-                        template="plotly_dark",
-                        plot_bgcolor='rgba(0,0,0,0)',
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        height=400,
-                        margin=dict(l=0, r=0, t=50, b=0),
-                        showlegend=False,
-                        xaxis=dict(
-                            showgrid=True,
-                            gridwidth=1,
-                            gridcolor='rgba(128, 128, 128, 0.2)'
-                        ),
-                        yaxis=dict(
-                            showgrid=False
-                        )
-                    )
-                    st.plotly_chart(fig_bottom, use_container_width=True)
+                fig_top.add_trace(go.Bar(
+                    y=top_10['country_name'],
+                    x=top_10['life_ladder'],
+                    orientation='h',
+                    marker=dict(
+                        color=top_10['life_ladder'],
+                        colorscale=happy_color_scale,
+                        showscale=False
+                    ),
+                    text=top_10['life_ladder'].round(2),
+                    textposition='auto',
+                    hovertemplate='<b>%{y}</b><br>Mutluluk Skoru: %{x:.2f}<extra></extra>'
+                ))
+
+                # Top 10 grafik düzeni
+                fig_top.update_layout(
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    font={'color': '#FFFFFF'},
+                    title={
+                        'text': f"En Mutlu 10 Ülke ({year_text})",
+                        'font': {'size': 24, 'color': '#FFFFFF'},
+                        'x': 0.5,
+                        'y': 0.95,
+                        'xanchor': 'center',
+                        'yanchor': 'top'
+                    },
+                    xaxis={
+                        'gridcolor': 'rgba(255,255,255,0.1)',
+                        'zerolinecolor': 'rgba(255,255,255,0.2)',
+                        'titlefont': {'color': '#FFFFFF'},
+                        'tickfont': {'color': '#FFFFFF'},
+                        'title': 'Mutluluk Skoru'
+                    },
+                    yaxis={
+                        'gridcolor': 'rgba(255,255,255,0.1)',
+                        'zerolinecolor': 'rgba(255,255,255,0.2)',
+                        'titlefont': {'color': '#FFFFFF'},
+                        'tickfont': {'color': '#FFFFFF'},
+                        'autorange': 'reversed'  # En mutlu ülkeyi en üstte göstermek için
+                    },
+                    height=400,
+                    margin=dict(l=0, r=0, t=50, b=0),
+                    showlegend=False
+                )
+
+                st.plotly_chart(fig_top, use_container_width=True)
+
+                # En mutsuz 10 ülke grafiği
+                st.markdown("""
+                    <div class="chart-container">
+                        <h3 class="section-title">📉 En Mutsuz 10 Ülke</h3>
+                    </div>
+                """, unsafe_allow_html=True)
+
+                # En mutsuz 10 ülkeyi seç
+                if selected_year != 'Tümü':
+                    bottom_10 = df[df['year'] == selected_year].nsmallest(10, 'life_ladder')
+                else:
+                    bottom_10 = df.groupby('country_name')['life_ladder'].mean().nsmallest(10).reset_index()
+
+                # Mutluluk skoruna göre artan sırada sırala (en mutsuz en üstte olacak)
+                bottom_10 = bottom_10.sort_values('life_ladder', ascending=True)
+
+                # Bottom 10 grafiği
+                fig_bottom = go.Figure()
                 
-                # Bölgesel dağılım analizi
-                top_regions = top_10['regional_indicator'].value_counts()
-                bottom_regions = bottom_10['regional_indicator'].value_counts()
+                # En mutsuz 10 ülke için kırmızı tonları
+                unhappy_color_scale = [
+                    [0, 'rgba(255,0,0,0.9)'],     # Koyu kırmızı
+                    [0.5, 'rgba(255,80,80,0.8)'], # Orta kırmızı
+                    [1, 'rgba(255,160,160,0.8)']  # Açık kırmızı
+                ]
                 
-                # İçgörüler
-                st.markdown("#### 🔍 Önemli İçgörüler")
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.info(f"""
-                    **En Mutlu 10 Ülke Analizi**:
-                    - Ortalama Mutluluk: {top_10['life_ladder'].mean():.2f}
-                    - En Yaygın Bölge: {top_regions.index[0]} ({top_regions.iloc[0]} ülke)
-                    - En Yüksek Skor: {top_10['life_ladder'].max():.2f} ({top_10.iloc[0]['country_name']})
-                    """)
-                
-                with col2:
-                    st.warning(f"""
-                    **En Mutsuz 10 Ülke Analizi**:
-                    - Ortalama Mutluluk: {bottom_10['life_ladder'].mean():.2f}
-                    - En Yaygın Bölge: {bottom_regions.index[0]} ({bottom_regions.iloc[0]} ülke)
-                    - En Düşük Skor: {bottom_10['life_ladder'].min():.2f} ({bottom_10.iloc[-1]['country_name']})
-                    """)
-                
-                st.markdown('</div>', unsafe_allow_html=True)
+                fig_bottom.add_trace(go.Bar(
+                    y=bottom_10['country_name'],
+                    x=bottom_10['life_ladder'],
+                    orientation='h',
+                    marker=dict(
+                        color=bottom_10['life_ladder'],
+                        colorscale=unhappy_color_scale,
+                        showscale=False
+                    ),
+                    text=bottom_10['life_ladder'].round(2),
+                    textposition='auto',
+                    hovertemplate='<b>%{y}</b><br>Mutluluk Skoru: %{x:.2f}<extra></extra>'
+                ))
+
+                # Bottom 10 grafik düzeni
+                fig_bottom.update_layout(
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    font={'color': '#FFFFFF'},
+                    title={
+                        'text': f"En Mutsuz 10 Ülke ({year_text})",
+                        'font': {'size': 24, 'color': '#FFFFFF'},
+                        'x': 0.5,
+                        'y': 0.95,
+                        'xanchor': 'center',
+                        'yanchor': 'top'
+                    },
+                    xaxis={
+                        'gridcolor': 'rgba(255,255,255,0.1)',
+                        'zerolinecolor': 'rgba(255,255,255,0.2)',
+                        'titlefont': {'color': '#FFFFFF'},
+                        'tickfont': {'color': '#FFFFFF'},
+                        'title': 'Mutluluk Skoru'
+                    },
+                    yaxis={
+                        'gridcolor': 'rgba(255,255,255,0.1)',
+                        'zerolinecolor': 'rgba(255,255,255,0.2)',
+                        'titlefont': {'color': '#FFFFFF'},
+                        'tickfont': {'color': '#FFFFFF'},
+                        'autorange': 'reversed'  # En mutsuz ülkeyi en üstte göstermek için
+                    },
+                    height=400,
+                    margin=dict(l=0, r=0, t=50, b=0),
+                    showlegend=False
+                )
+
+                st.plotly_chart(fig_bottom, use_container_width=True)
             
             with tab2:
                 st.markdown('<div class="dashboard-container">', unsafe_allow_html=True)
-                st.markdown('<h3 class="section-title">Mutluluk Trend Analizi</h3>', unsafe_allow_html=True)
                 
-                # Global trend analizi
-                st.markdown("### 📈 Global Mutluluk Trendi")
+                
                 
                 # Yıllara göre global ortalama
                 global_trend = df.groupby('year')['life_ladder'].agg(['mean', 'std']).reset_index()
@@ -933,8 +1202,8 @@ def main():
                     y=global_trend['mean'],
                     mode='lines+markers',
                     name='Global Ortalama',
-                    line=dict(color='#8dd3c7', width=3),
-                    marker=dict(size=8)
+                    line=dict(color='#00FFE7', width=3),
+                    marker=dict(size=8, color='#007AFF')
                 ))
                 
                 # Standart sapma aralığı
@@ -943,7 +1212,7 @@ def main():
                     y=global_trend['mean'] + global_trend['std'],
                     mode='lines',
                     name='Standart Sapma',
-                    line=dict(color='rgba(141, 211, 199, 0.2)', width=0),
+                    line=dict(color='rgba(170, 0, 255, 0.2)', width=0),
                     showlegend=False
                 ))
                 
@@ -952,29 +1221,130 @@ def main():
                     y=global_trend['mean'] - global_trend['std'],
                     mode='lines',
                     name='Standart Sapma',
-                    line=dict(color='rgba(141, 211, 199, 0.2)', width=0),
+                    line=dict(color='rgba(170, 0, 255, 0.2)', width=0),
                     fill='tonexty'
                 ))
                 
+                # Global trend grafiği düzeni
                 fig_global.update_layout(
-                    title="Global Mutluluk Trendi ve Değişkenlik",
+                    **CHART_THEME,
                     xaxis_title="Yıl",
                     yaxis_title="Mutluluk Skoru",
-                    template="plotly_dark",
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    hovermode='x unified'
+                    hovermode='x unified',
+                    showlegend=True,
+                    legend=dict(
+                        yanchor="top",
+                        y=0.99,
+                        xanchor="left",
+                        x=0.01,
+                        bgcolor="rgba(0,0,0,0)",
+                        bordercolor="rgba(255,255,255,0.2)"
+                    )
                 )
                 
+                # Başlığı ayrıca güncelle
+                fig_global.update_layout(
+                    title_text="Global Mutluluk Trendi ve Değişkenlik"
+                )
+
                 st.plotly_chart(fig_global, use_container_width=True)
                 
+                
+                
+                # Global trend istatistikleri
+                total_change = global_trend['mean'].iloc[-1] - global_trend['mean'].iloc[0]
+                avg_change = total_change / (len(global_trend) - 1)
+                volatility = global_trend['std'].mean()
+                
+                # Metrik kartları için özel stil
+                metric_style = """
+                    <div style="
+                        background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%);
+                        border: 1px solid rgba(255,255,255,0.1);
+                        border-radius: 16px;
+                        padding: 1.5rem;
+                        height: 180px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        transition: all 0.3s ease;
+                        backdrop-filter: blur(10px);
+                        -webkit-backdrop-filter: blur(10px);
+                    "
+                    onmouseover="this.style.transform='translateY(-5px)'; this.style.borderColor='rgba(0,198,255,0.5)'"
+                    onmouseout="this.style.transform='none'; this.style.borderColor='rgba(255,255,255,0.1)'"
+                    >
+                        <div style="
+                            font-size: 1.1rem;
+                            font-weight: 500;
+                            color: rgba(255,255,255,0.9);
+                            margin-bottom: 1rem;
+                            text-align: center;
+                        ">{title}</div>
+                        <div style="
+                            font-size: 2.5rem;
+                            font-weight: 700;
+                            background: linear-gradient(135deg, #00FFE7 0%, #007AFF 50%, #AA00FF 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            margin-bottom: 0.75rem;
+                            text-align: center;
+                        ">{value}</div>
+                        <div style="
+                            color: rgba(255,255,255,0.6);
+                            font-size: 0.9rem;
+                            text-align: center;
+                        ">{description}</div>
+                    </div>
+                """
+                
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    st.markdown(
+                        metric_style.format(
+                            title="Toplam Değişim",
+                            value="{:+.2f}".format(total_change),
+                            description="2005'ten günümüze"
+                        ),
+                        unsafe_allow_html=True
+                    )
+                
+                with col2:
+                    st.markdown(
+                        metric_style.format(
+                            title="Yıllık Ortalama Değişim",
+                            value="{:+.2f}".format(avg_change),
+                            description="Her yıl için"
+                        ),
+                        unsafe_allow_html=True
+                    )
+                
+                with col3:
+                    st.markdown(
+                        metric_style.format(
+                            title="Ortalama Değişkenlik",
+                            value="{:.2f}".format(volatility),
+                            description="Standart sapma"
+                        ),
+                        unsafe_allow_html=True
+                    )
+                
                 # Bölgesel trend analizi
-                st.markdown("### 🌍 Bölgesel Mutluluk Trendleri")
+               
                 
                 # Bölgelere göre yıllık ortalamalar
                 regional_trend = df.groupby(['year', 'regional_indicator'])['life_ladder'].mean().reset_index()
                 
                 fig_regional = go.Figure()
+                
+                # Her bölge için farklı renk
+                region_colors = {
+                    region: f'rgba({int(170 * (1-i/len(regional_trend["regional_indicator"].unique())))}, '
+                           f'{int(0 + (255 * i/len(regional_trend["regional_indicator"].unique())))}, '
+                           f'{int(255 * (i/len(regional_trend["regional_indicator"].unique())))}, 0.8)'
+                    for i, region in enumerate(regional_trend['regional_indicator'].unique())
+                }
                 
                 for region in regional_trend['regional_indicator'].unique():
                     region_data = regional_trend[regional_trend['regional_indicator'] == region]
@@ -983,60 +1353,52 @@ def main():
                         y=region_data['life_ladder'],
                         mode='lines+markers',
                         name=region,
+                        line=dict(color=region_colors[region], width=2),
                         marker=dict(size=6)
                     ))
                 
+                # Bölgesel trend grafiği düzeni
                 fig_regional.update_layout(
-                    title="Bölgesel Mutluluk Trendleri",
+                    **CHART_THEME,
                     xaxis_title="Yıl",
                     yaxis_title="Mutluluk Skoru",
-                    template="plotly_dark",
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    paper_bgcolor='rgba(0,0,0,0)',
                     hovermode='x unified',
-                    height=600
+                    height=600,
+                    showlegend=True,
+                    title={
+                        'text': "Bölgesel Mutluluk Trendleri",
+                        'y': 0.95,  # Title'ı biraz yukarı taşı
+                        'x': 0.5,
+                        'xanchor': 'center',
+                        'yanchor': 'top',
+                        'font': {'size': 24}
+                    },
+                    legend=dict(
+                        orientation="h",
+                        yanchor="bottom",
+                        y=1.15,  # Legend'i title'ın üzerine taşı
+                        xanchor="center",
+                        x=0.5,
+                        bgcolor="rgba(0,0,0,0)",
+                        bordercolor="rgba(255,255,255,0.2)",
+                        font=dict(size=10)
+                    ),
+                    margin=dict(t=150)  # Üst marjini arttır
                 )
                 
                 st.plotly_chart(fig_regional, use_container_width=True)
-                
-                # Trend analizi içgörüleri
-                st.markdown("### 🔍 Trend Analizi İçgörüleri")
-                
-                # Global trend istatistikleri
-                total_change = global_trend['mean'].iloc[-1] - global_trend['mean'].iloc[0]
-                avg_change = total_change / (len(global_trend) - 1)
-                volatility = global_trend['std'].mean()
-                
-                col1, col2, col3 = st.columns(3)
-                
-                with col1:
-                    st.metric(
-                        "Toplam Değişim",
-                        f"{total_change:+.2f}",
-                        "2005'ten günümüze"
-                    )
-                
-                with col2:
-                    st.metric(
-                        "Yıllık Ortalama Değişim",
-                        f"{avg_change:+.2f}",
-                        "Her yıl için"
-                    )
-                
-                with col3:
-                    st.metric(
-                        "Ortalama Değişkenlik",
-                        f"{volatility:.2f}",
-                        "Standart sapma"
-                    )
                 
                 st.markdown('</div>', unsafe_allow_html=True)
             
             with tab3:
                 st.markdown('<div class="dashboard-container">', unsafe_allow_html=True)
-                st.markdown('<h3 class="section-title">📊 Faktör Analizi Sekmesi</h3>', unsafe_allow_html=True)
                 
-                st.markdown("### 1. Mutluluk ile Faktörler Arasındaki Korelasyon (Heatmap)")
+                # Korelasyon analizi
+                st.markdown("""
+                    <div class="chart-container">
+                        <h3 class="section-title">🔄 Faktörler Arası Korelasyon</h3>
+                    </div>
+                """, unsafe_allow_html=True)
                 
                 # Faktör listesi
                 factors = ['life_ladder', 'gdp_per_capita', 'social_support', 
@@ -1061,53 +1423,74 @@ def main():
                     z=corr_matrix,
                     x=[factor_names[f] for f in factors],
                     y=[factor_names[f] for f in factors],
-                    colorscale='RdBu',
+                    colorscale=MAP_COLOR_SCALE,
                     zmid=0,
                     text=np.round(corr_matrix, 2),
                     texttemplate='%{text}',
-                    textfont={"size": 10},
+                    textfont={"size": 12, "color": "white"},
                     hoverongaps=False
                 ))
                 
+                # Korelasyon heatmap düzeni
                 fig_corr.update_layout(
-                    template="plotly_dark",
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    paper_bgcolor='rgba(0,0,0,0)',
+                    **CHART_THEME,
                     height=500,
-                    margin=dict(l=50, r=50, t=30, b=50)
+                    margin=dict(l=50, r=50, t=50, b=50)
                 )
                 
+                # Başlığı ayrıca güncelle
+                fig_corr.update_layout(
+                    title_text="Faktörler Arası Korelasyon"
+                )
+
                 st.plotly_chart(fig_corr, use_container_width=True)
 
-                # 2. Faktörlerin Etkisi (Scatter Plots)
-                st.markdown("### 2. Faktörlerin Etkisi (Scatter Plots)")
+                # Faktör etki analizi
+                st.markdown("""
+                    <div class="chart-container">
+                        <h3 class="section-title">📊 Faktörlerin Mutluluk Üzerindeki Etkisi</h3>
+                    </div>
+                """, unsafe_allow_html=True)
 
                 # Scatter plot için faktörler
                 scatter_factors = ['gdp_per_capita', 'internet_users_percent', 'freedom_to_make_life_choices']
                 
                 for factor in scatter_factors:
-                    # Önce scatter plot'u oluştur (trend çizgisi olmadan)
-                    fig_scatter = px.scatter(
-                        df,
-                        x=factor,
-                        y='life_ladder',
-                        title=f"{factor_names[factor]} vs Mutluluk",
-                        labels={
-                            factor: factor_names[factor],
-                            'life_ladder': 'Mutluluk Skoru'
-                        },
-                        template="plotly_dark"
-                    )
+                    # Scatter plot container
+                    st.markdown(f"""
+                        <div class="chart-container">
+                            <h4 class="section-subtitle">{factor_names[factor]} ve Mutluluk İlişkisi</h4>
+                        </div>
+                    """, unsafe_allow_html=True)
                     
-                    # Scatter noktalarının stilini ayarla
-                    fig_scatter.data[0].marker.update(
-                        color='#FFA500',  # Turuncu renk
-                        size=6,
-                        opacity=0.6,
-                        line=dict(color='#ffffff', width=1)
-                    )
+                    # Scatter plot
+                    fig_scatter = go.Figure()
                     
-                    # Trend çizgisini ayrı bir trace olarak ekle
+                    # Ana scatter plot
+                    fig_scatter.add_trace(go.Scatter(
+                        x=df[factor],
+                        y=df['life_ladder'],
+                        mode='markers',
+                        name='Ülkeler',
+                        marker=dict(
+                            color=df[factor],
+                            colorscale=MAP_COLOR_SCALE,
+                            size=8,
+                            opacity=0.6,
+                            showscale=True,
+                            colorbar=dict(
+                                title=factor_names[factor],
+                                titleside="right"
+                            )
+                        ),
+                        hovertemplate=
+                        '<b>%{text}</b><br>' +
+                        f'{factor_names[factor]}: %{{x:.2f}}<br>' +
+                        'Mutluluk: %{y:.2f}<extra></extra>',
+                        text=df['country_name']
+                    ))
+                    
+                    # Trend çizgisi
                     slope, intercept, r_value, p_value, std_err = stats.linregress(df[factor], df['life_ladder'])
                     line_x = np.array([df[factor].min(), df[factor].max()])
                     line_y = slope * line_x + intercept
@@ -1118,47 +1501,44 @@ def main():
                             y=line_y,
                             mode='lines',
                             name='Trend',
-                            line=dict(color='#ff0000', width=5)  # Koyu kırmızı ve kalın çizgi
+                            line=dict(color='#AA00FF', width=2, dash='dash'),
+                            hovertemplate=f'R² = {r_value**2:.3f}<extra></extra>'
                         )
                     )
                     
+                    # Scatter plot düzeni
                     fig_scatter.update_layout(
-                        plot_bgcolor='rgba(0,0,0,0)',
-                        paper_bgcolor='rgba(0,0,0,0)',
+                        **CHART_THEME,
                         height=400,
-                        margin=dict(l=0, r=0, t=50, b=0)
+                        xaxis_title=factor_names[factor],
+                        yaxis_title="Mutluluk Skoru",
+                        showlegend=True,
+                        legend=dict(
+                            yanchor="top",
+                            y=0.99,
+                            xanchor="left",
+                            x=0.01,
+                            bgcolor="rgba(0,0,0,0)",
+                            bordercolor="rgba(255,255,255,0.2)"
+                        )
                     )
                     
-                    st.plotly_chart(fig_scatter, use_container_width=True)
+                    # Başlığı ayrıca güncelle
+                    fig_scatter.update_layout(
+                        title_text=f"{factor_names[factor]} ve Mutluluk İlişkisi"
+                    )
 
-                # 3. Gelir Seviyesine Göre Mutluluk Dağılımı (Boxplot)
-                st.markdown("### 3. Gelir Seviyesine Göre Mutluluk Dağılımı (Boxplot)")
-                
-                # GDP'ye göre ülkeleri kategorilere ayır
-                df['income_level'] = pd.qcut(df['gdp_per_capita'], 
-                                          q=3, 
-                                          labels=['Düşük Gelir', 'Orta Gelir', 'Yüksek Gelir'])
-                
-                fig_box = px.box(
-                    df,
-                    x='income_level',
-                    y='life_ladder',
-                    title='Gelir Seviyesine Göre Mutluluk Dağılımı',
-                    labels={
-                        'income_level': 'Gelir Seviyesi',
-                        'life_ladder': 'Mutluluk Skoru'
-                    },
-                    template="plotly_dark"
-                )
-                
-                fig_box.update_layout(
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    height=400,
-                    margin=dict(l=50, r=50, t=50, b=50)
-                )
-                
-                st.plotly_chart(fig_box, use_container_width=True)
+                    st.plotly_chart(fig_scatter, use_container_width=True)
+                    
+                    # Korelasyon metriği
+                    correlation = df['life_ladder'].corr(df[factor])
+                    st.markdown(f"""
+                        <div class="metric-container">
+                            <div class="metric-label">Korelasyon Katsayısı</div>
+                            <div class="metric-value">{correlation:.3f}</div>
+                            <div class="metric-score">R² = {r_value**2:.3f}</div>
+                        </div>
+                    """, unsafe_allow_html=True)
                 
                 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1223,12 +1603,13 @@ def main():
                         </div>
                     """, unsafe_allow_html=True)
 
+                    # Yükleniyor animasyonu
                     with st.spinner("💫 Yanıt hazırlanıyor..."):
                         answer = multi_agent.get_answer(question)
                         if answer:
                             st.markdown(f"""
                             <div class="chat-message">
-                                <div style='color: #00c6ff; font-weight: 500; margin-bottom: 8px;'>🤖 AI Asistan</div>
+                                <div style='color: #00c6ff; font-weight: 500; margin-bottom: 8px;'>🤖 Analiz Sonuçları</div>
                                 <div style='color: rgba(255,255,255,0.9);'>
                                     {answer}
                                 </div>
