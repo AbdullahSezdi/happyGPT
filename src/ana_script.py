@@ -835,13 +835,6 @@ def main():
                     'paper_bgcolor': 'rgba(0,0,0,0)',
                     'plot_bgcolor': 'rgba(0,0,0,0)',
                     'font': {'color': '#FFFFFF'},
-                    'title': {
-                        'font': {'size': 24, 'color': '#FFFFFF'},
-                        'x': 0.5,
-                        'y': 0.95,
-                        'xanchor': 'center',
-                        'yanchor': 'top'
-                    },
                     'xaxis': {
                         'gridcolor': 'rgba(255,255,255,0.1)',
                         'zerolinecolor': 'rgba(255,255,255,0.2)',
@@ -958,59 +951,56 @@ def main():
                     regional_avg = df.groupby('regional_indicator')['life_ladder'].mean().reset_index()
                     year_text = "Tüm Yıllar"
                 
-                # Ortalamalara göre sırala
-                regional_avg = regional_avg.sort_values('life_ladder', ascending=False)
+                # Ortalamalara göre sırala (en mutludan en mutsuza)
+                regional_avg = regional_avg.sort_values('life_ladder', ascending=True)
+                
+                # Bölge isimlerini kısalt (sadece görüntüleme için)
+                display_names = regional_avg['regional_indicator'].copy()
+                display_names = display_names.replace({
+                    'Commonwealth of Independent States': 'Independent States'
+                })
                 
                 # Bar chart oluştur
                 fig_regional = go.Figure()
 
                 # Renk skalası
                 happiness_colors = [
-                    [0, 'rgba(255,0,0,0.8)'],     # Kırmızı (en mutsuz)
-                    [0.5, 'rgba(255,165,0,0.8)'], # Turuncu (orta)
-                    [1, 'rgba(0,255,127,0.8)']    # Yeşil (en mutlu)
+                    [0, 'rgba(255,0,0,0.9)'],     # Koyu kırmızı (en mutsuz)
+                    [0.5, 'rgba(255,165,0,0.9)'], # Turuncu (orta)
+                    [1, 'rgba(0,255,127,0.9)']    # Parlak yeşil (en mutlu)
                 ]
-                
+
                 fig_regional.add_trace(go.Bar(
-                    y=regional_avg['regional_indicator'],
+                    y=display_names,
                     x=regional_avg['life_ladder'],
                     orientation='h',
                     marker=dict(
                         color=regional_avg['life_ladder'],
-                        colorscale=happiness_colors
+                        colorscale=happiness_colors,
+                        line=dict(width=1, color='rgba(255,255,255,0.2)')
                     ),
                     text=regional_avg['life_ladder'].round(2),
-                    textposition='auto',
+                    textposition='outside',
+                    textfont=dict(size=12, color='white'),
                     hovertemplate='<b>%{y}</b><br>Mutluluk Skoru: %{x:.2f}<extra></extra>'
                 ))
                 
                 # Bölgesel trend grafiği düzeni
                 fig_regional.update_layout(
                     **CHART_THEME,
-                    xaxis_title="Yıl",
-                    yaxis_title="Mutluluk Skoru",
+                    xaxis_title="Mutluluk Skoru",
+                    yaxis_title=None,
                     hovermode='x unified',
                     height=600,
-                    showlegend=True,
+                    showlegend=False,
                     title={
-                        'text': "Bölgesel Mutluluk Trendleri",
-                        'y': 0.95,  # Title'ı biraz yukarı taşı
+                        'text': "Bölgesel Mutluluk Ortalamaları",
+                        'y': 0.95,
                         'x': 0.5,
                         'xanchor': 'center',
                         'yanchor': 'top',
                         'font': {'size': 24}
-                    },
-                    legend=dict(
-                        orientation="h",
-                        yanchor="bottom",
-                        y=1.15,  # Legend'i title'ın üzerine taşı
-                        xanchor="center",
-                        x=0.5,
-                        bgcolor="rgba(0,0,0,0)",
-                        bordercolor="rgba(255,255,255,0.2)",
-                        font=dict(size=10)
-                    ),
-                    margin=dict(t=150)  # Üst marjini arttır
+                    }
                 )
 
                 st.plotly_chart(fig_regional, use_container_width=True)
@@ -1360,30 +1350,19 @@ def main():
                 # Bölgesel trend grafiği düzeni
                 fig_regional.update_layout(
                     **CHART_THEME,
-                    xaxis_title="Yıl",
-                    yaxis_title="Mutluluk Skoru",
+                    xaxis_title="Mutluluk Skoru",
+                    yaxis_title=None,
                     hovermode='x unified',
                     height=600,
-                    showlegend=True,
+                    showlegend=False,
                     title={
-                        'text': "Bölgesel Mutluluk Trendleri",
-                        'y': 0.95,  # Title'ı biraz yukarı taşı
+                        'text': "Bölgesel Mutluluk Ortalamaları",
+                        'y': 0.95,
                         'x': 0.5,
                         'xanchor': 'center',
                         'yanchor': 'top',
                         'font': {'size': 24}
-                    },
-                    legend=dict(
-                        orientation="h",
-                        yanchor="bottom",
-                        y=1.15,  # Legend'i title'ın üzerine taşı
-                        xanchor="center",
-                        x=0.5,
-                        bgcolor="rgba(0,0,0,0)",
-                        bordercolor="rgba(255,255,255,0.2)",
-                        font=dict(size=10)
-                    ),
-                    margin=dict(t=150)  # Üst marjini arttır
+                    }
                 )
                 
                 st.plotly_chart(fig_regional, use_container_width=True)
