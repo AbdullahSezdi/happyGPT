@@ -424,4 +424,16 @@ def load_dataset():
         df = pd.read_csv("src/cleaned_dataset.csv")  # Gerçek path'i kullanın
         return df
     except Exception as e:
-     
+        st.error(f"Veri yüklenirken hata oluştu: {str(e)}")
+        return None
+
+# Session state kontrolü
+if 'df' not in st.session_state:
+    df = load_dataset()
+    if df is not None:
+        st.session_state.df = df
+    else:
+        st.error("Veri yüklenemedi!")
+
+if 'df' in st.session_state and 'multi_agent_system' not in st.session_state:
+    st.session_state.multi_agent_system = MultiAgentSystem(st.session_state.df)
