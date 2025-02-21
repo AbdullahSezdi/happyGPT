@@ -740,9 +740,34 @@ def main():
 
     # Hero Section
     st.markdown("""
-        <div class="hero-section">
-            <h1 class="hero-title">Dünya Mutluluk Analizi</h1>
-            <p class="hero-subtitle">Küresel mutluluk verilerini keşfedin ve ülkeler arasındaki ilişkileri analiz edin</p>
+        <div style="
+            background: rgba(18, 18, 18, 0.8);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        ">
+            <h1 style="
+                font-size: 3.5rem;
+                font-weight: 800;
+                letter-spacing: -0.5px;
+                margin-bottom: 1.5rem;
+                color: #00c6ff;
+                text-shadow: 0 2px 10px rgba(0, 198, 255, 0.2);
+                font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            ">Dünya Mutluluk Analizi</h1>
+            <p style="
+                font-size: 1.2rem;
+                color: rgba(255, 255, 255, 0.9);
+                max-width: 600px;
+                margin: 0 auto;
+                line-height: 1.6;
+                font-weight: 500;
+            ">Küresel mutluluk verilerini keşfedin ve ülkeler arasındaki ilişkileri analiz edin</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -766,7 +791,7 @@ def main():
         st.markdown('<div class="main-wrapper">', unsafe_allow_html=True)
         
         # Navigasyon - Ortalanmış
-        st.markdown('<div style="display: flex; justify-content: center; gap: 1rem; margin: 1rem 0;">', unsafe_allow_html=True)
+        st.markdown('<div style="display: flex; justify-content: center; gap: 1rem; margin: -4rem 0 1rem 0;">', unsafe_allow_html=True)
         col1, col2 = st.columns([1, 1])
         with col1:
             if st.button("📊 Dashboard", key="home_btn", use_container_width=True):
@@ -781,7 +806,16 @@ def main():
         # Ana içerik
         if st.session_state.current_page == 'Ana-Sayfa':
             # Başlık
-            st.markdown('<h1 class="dashboard-title">Dünya Mutluluk Analizi</h1>', unsafe_allow_html=True)
+            st.markdown("""
+                <h1 style="
+                    text-align: center;
+                    margin: 10rem 0 0 0;
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    color: #FFFFFF;
+                    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                ">Dünya Mutluluk Analizi</h1>
+            """, unsafe_allow_html=True)
             
             # Filtre Bar - Ortalanmış
             with st.container():
@@ -799,11 +833,83 @@ def main():
                 st.markdown('</div>', unsafe_allow_html=True)
 
             # Tab Sistemi - Ortalanmış
+            st.markdown("""
+                <style>
+                    /* Tab container */
+                    [data-testid="stHorizontalBlock"] {
+                        background: transparent !important;
+                        padding: 0 !important;
+                    }
+                    
+                    /* Tab list */
+                    [data-baseweb="tab-list"] {
+                        display: flex !important;
+                        justify-content: center !important;
+                        gap: 2rem !important;
+                        padding: 1rem 0 !important;
+                        background: transparent !important;
+                        border-radius: 0 !important;
+                        border: none !important;
+                        margin-bottom: 2rem !important;
+                    }
+                    
+                    /* Individual tab */
+                    [data-baseweb="tab"] {
+                        background: rgba(18, 18, 18, 0.8) !important;
+                        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                        border-radius: 12px !important;
+                        padding: 1rem 2rem !important;
+                        font-size: 1.1rem !important;
+                        font-weight: 500 !important;
+                        color: rgba(255, 255, 255, 0.8) !important;
+                        transition: all 0.3s ease !important;
+                        min-width: 200px !important;
+                        text-align: center !important;
+                    }
+                    
+                    /* Hover effect */
+                    [data-baseweb="tab"]:hover {
+                        transform: translateY(-2px) !important;
+                        border-color: #00c6ff !important;
+                        color: #FFFFFF !important;
+                    }
+                    
+                    /* Selected tab */
+                    [data-baseweb="tab"][aria-selected="true"] {
+                        background: linear-gradient(135deg, rgba(170, 0, 255, 0.9) 0%, rgba(0, 122, 255, 0.9) 50%, rgba(0, 255, 231, 0.9) 100%) !important;
+                        border: none !important;
+                        color: #FFFFFF !important;
+                        font-weight: 600 !important;
+                        box-shadow: 0 4px 12px rgba(0, 198, 255, 0.3) !important;
+                    }
+                </style>
+            """, unsafe_allow_html=True)
+            
             tab1, tab2, tab3 = st.tabs(["🌍 Genel Bakış", "📈 Trend Analizi", "🔍 Faktör Analizi"])
             
             with tab1:
                 st.markdown('<div class="dashboard-container">', unsafe_allow_html=True)
-                st.markdown('<h3 class="section-title">Dünya Mutluluk Haritası</h3>', unsafe_allow_html=True)
+                st.markdown("""
+                    <h3 style="
+                        text-align: center;
+                        font-size: 28px;
+                        font-weight: 600;
+                        color: #00c6ff;
+                        margin-top: 2rem;
+                        font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        letter-spacing: -0.5px;
+                        padding: 0;
+                    ">🗺️ Dünya Mutluluk Haritası</h3>
+                    <p style="
+                        text-align: center;
+                        color: rgba(255, 255, 255, 0.9);
+                        font-size: 16px;
+                        margin-top: 0.5rem;
+                        max-width: 600px;
+                        margin-left: auto;
+                        margin-right: auto;
+                    ">Ülkelerin mutluluk skorlarının küresel dağılımı ve karşılaştırmalı analizi</p>
+                """, unsafe_allow_html=True)
                 
                 # Harita verilerini hazırla
                 if selected_year != 'Tümü':
@@ -897,10 +1003,35 @@ def main():
                 
                 with col1:
                     st.markdown("""
-                        <div class="metric-container">
-                            <div class="metric-value">{}</div>
-                            <div class="metric-label">En Mutlu Ülke</div>
-                            <div class="metric-score">{:.2f}</div>
+                        <div style="
+                            background: rgba(18, 18, 18, 0.8);
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 12px;
+                            padding: 1rem;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            height: 120px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        ">
+                            <div style="
+                                font-size: 1.8rem;
+                                font-weight: 600;
+                                color: #00c6ff;
+                                margin-bottom: 0.3rem;
+                                line-height: 1.2;
+                            ">{}</div>
+                            <div style="
+                                color: rgba(255,255,255,0.7);
+                                font-size: 0.9rem;
+                                margin-bottom: 0.2rem;
+                            ">En Mutlu Ülke</div>
+                            <div style="
+                                color: rgba(255,255,255,0.9);
+                                font-size: 1.1rem;
+                                font-weight: 500;
+                            ">{:.2f}</div>
                         </div>
                     """.format(
                         map_data.nlargest(1, 'life_ladder')['country_name'].iloc[0],
@@ -909,10 +1040,35 @@ def main():
                 
                 with col2:
                     st.markdown("""
-                        <div class="metric-container">
-                            <div class="metric-value">{:.2f}</div>
-                            <div class="metric-label">Global Ortalama</div>
-                            <div class="metric-score">±{:.2f} std</div>
+                        <div style="
+                            background: rgba(18, 18, 18, 0.8);
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 12px;
+                            padding: 1rem;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            height: 120px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        ">
+                            <div style="
+                                font-size: 1.8rem;
+                                font-weight: 600;
+                                color: #00c6ff;
+                                margin-bottom: 0.3rem;
+                                line-height: 1.2;
+                            ">{:.2f}</div>
+                            <div style="
+                                color: rgba(255,255,255,0.7);
+                                font-size: 0.9rem;
+                                margin-bottom: 0.2rem;
+                            ">Global Ortalama</div>
+                            <div style="
+                                color: rgba(255,255,255,0.9);
+                                font-size: 1.1rem;
+                                font-weight: 500;
+                            ">±{:.2f} std</div>
                         </div>
                     """.format(
                         map_data['life_ladder'].mean(),
@@ -921,10 +1077,35 @@ def main():
                 
                 with col3:
                     st.markdown("""
-                        <div class="metric-container">
-                            <div class="metric-value">{}</div>
-                            <div class="metric-label">En Mutsuz Ülke</div>
-                            <div class="metric-score">{:.2f}</div>
+                        <div style="
+                            background: rgba(18, 18, 18, 0.8);
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 12px;
+                            padding: 1rem;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            height: 120px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        ">
+                            <div style="
+                                font-size: 1.8rem;
+                                font-weight: 600;
+                                color: #00c6ff;
+                                margin-bottom: 0.3rem;
+                                line-height: 1.2;
+                            ">{}</div>
+                            <div style="
+                                color: rgba(255,255,255,0.7);
+                                font-size: 0.9rem;
+                                margin-bottom: 0.2rem;
+                            ">En Mutsuz Ülke</div>
+                            <div style="
+                                color: rgba(255,255,255,0.9);
+                                font-size: 1.1rem;
+                                font-weight: 500;
+                            ">{:.2f}</div>
                         </div>
                     """.format(
                         map_data.nsmallest(1, 'life_ladder')['country_name'].iloc[0],
@@ -939,7 +1120,25 @@ def main():
                 # Bölgesel Mutluluk Ortalamaları
                 st.markdown("""
                     <div class="chart-container">
-                        <h3 class="section-title">🌍 Bölgesel Mutluluk Ortalamaları</h3>
+                        <h3 style="
+                            text-align: center;
+                            font-size: 28px;
+                            font-weight: 600;
+                            color: #00c6ff;
+                            margin-top: 2rem;
+                            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            letter-spacing: -0.5px;
+                            padding: 0;
+                        ">🌍 Bölgesel Mutluluk Ortalamaları</h3>
+                        <p style="
+                            text-align: center;
+                            color: rgba(255, 255, 255, 0.9);
+                            font-size: 16px;
+                            margin-top: 0.5rem;
+                            max-width: 600px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        ">Dünya genelindeki bölgelerin ortalama mutluluk skorları ve karşılaştırmalı analizi</p>
                     </div>
                 """, unsafe_allow_html=True)
                 
@@ -1009,29 +1208,97 @@ def main():
                 col1, col2 = st.columns(2)
                 
                 with col1:
-                    happiest_region = regional_avg.iloc[0]  # En yüksek skor (ascending=False olduğu için ilk eleman)
+                    happiest_region = regional_avg.iloc[-1]  # En yüksek skor
                     st.markdown(f"""
-                        <div class="metric-container">
-                            <div class="metric-value">{happiest_region['regional_indicator']}</div>
-                            <div class="metric-label">En Mutlu Bölge</div>
-                            <div class="metric-score">Ortalama Skor: {happiest_region['life_ladder']:.2f}</div>
+                        <div style="
+                            background: rgba(18, 18, 18, 0.8);
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 12px;
+                            padding: 1rem;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            height: 120px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        ">
+                            <div style="
+                                font-size: 1.8rem;
+                                font-weight: 600;
+                                color: #00c6ff;
+                                margin-bottom: 0.3rem;
+                                line-height: 1.2;
+                            ">{happiest_region['regional_indicator']}</div>
+                            <div style="
+                                color: rgba(255,255,255,0.7);
+                                font-size: 0.9rem;
+                                margin-bottom: 0.2rem;
+                            ">En Mutlu Bölge</div>
+                            <div style="
+                                color: rgba(255,255,255,0.9);
+                                font-size: 1.1rem;
+                                font-weight: 500;
+                            ">Ortalama Skor: {happiest_region['life_ladder']:.2f}</div>
                         </div>
                     """, unsafe_allow_html=True)
                 
                 with col2:
-                    unhappiest_region = regional_avg.iloc[-1]  # En düşük skor (ascending=False olduğu için son eleman)
+                    unhappiest_region = regional_avg.iloc[0]  # En düşük skor
                     st.markdown(f"""
-                        <div class="metric-container">
-                            <div class="metric-value">{unhappiest_region['regional_indicator']}</div>
-                            <div class="metric-label">En Mutsuz Bölge</div>
-                            <div class="metric-score">Ortalama Skor: {unhappiest_region['life_ladder']:.2f}</div>
+                        <div style="
+                            background: rgba(18, 18, 18, 0.8);
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 12px;
+                            padding: 1rem;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            height: 120px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        ">
+                            <div style="
+                                font-size: 1.8rem;
+                                font-weight: 600;
+                                color: #00c6ff;
+                                margin-bottom: 0.3rem;
+                                line-height: 1.2;
+                            ">{unhappiest_region['regional_indicator']}</div>
+                            <div style="
+                                color: rgba(255,255,255,0.7);
+                                font-size: 0.9rem;
+                                margin-bottom: 0.2rem;
+                            ">En Mutsuz Bölge</div>
+                            <div style="
+                                color: rgba(255,255,255,0.9);
+                                font-size: 1.1rem;
+                                font-weight: 500;
+                            ">Ortalama Skor: {unhappiest_region['life_ladder']:.2f}</div>
                         </div>
                     """, unsafe_allow_html=True)
 
                 # En mutlu 10 ülke grafiği
                 st.markdown("""
                     <div class="chart-container">
-                        <h3 class="section-title">🏆 En Mutlu 10 Ülke</h3>
+                        <h3 style="
+                            text-align: center;
+                            font-size: 28px;
+                            font-weight: 600;
+                            color: #00c6ff;
+                            margin-top: 2rem;
+                            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            letter-spacing: -0.5px;
+                            padding: 0;
+                        ">🏆 En Mutlu 10 Ülke</h3>
+                        <p style="
+                            text-align: center;
+                            color: rgba(255, 255, 255, 0.9);
+                            font-size: 16px;
+                            margin-top: 0.5rem;
+                            max-width: 600px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        ">En yüksek mutluluk skoruna sahip ilk 10 ülke ve detaylı istatistikleri</p>
                     </div>
                 """, unsafe_allow_html=True)
 
@@ -1105,7 +1372,25 @@ def main():
                 # En mutsuz 10 ülke grafiği
                 st.markdown("""
                     <div class="chart-container">
-                        <h3 class="section-title">📉 En Mutsuz 10 Ülke</h3>
+                        <h3 style="
+                            text-align: center;
+                            font-size: 28px;
+                            font-weight: 600;
+                            color: #00c6ff;
+                            margin-top: 2rem;
+                            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            letter-spacing: -0.5px;
+                            padding: 0;
+                        ">📉 En Mutsuz 10 Ülke</h3>
+                        <p style="
+                            text-align: center;
+                            color: rgba(255, 255, 255, 0.9);
+                            font-size: 16px;
+                            margin-top: 0.5rem;
+                            max-width: 600px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        ">En düşük mutluluk skoruna sahip 10 ülke ve karşılaştırmalı analizi</p>
                     </div>
                 """, unsafe_allow_html=True)
 
@@ -1179,7 +1464,30 @@ def main():
             with tab2:
                 st.markdown('<div class="dashboard-container">', unsafe_allow_html=True)
                 
-                
+                # Global Trend Başlığı
+                st.markdown("""
+                    <div class="chart-container">
+                        <h3 style="
+                            text-align: center;
+                            font-size: 28px;
+                            font-weight: 600;
+                            color: #00c6ff;
+                            margin-top: 2rem;
+                            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            letter-spacing: -0.5px;
+                            padding: 0;
+                        ">📈 Global Mutluluk Trendi ve Değişkenlik</h3>
+                        <p style="
+                            text-align: center;
+                            color: rgba(255, 255, 255, 0.9);
+                            font-size: 16px;
+                            margin-top: 0.5rem;
+                            max-width: 600px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        ">Dünya genelindeki mutluluk skorlarının yıllara göre değişimi ve standart sapma analizi</p>
+                    </div>
+                """, unsafe_allow_html=True)
                 
                 # Yıllara göre global ortalama
                 global_trend = df.groupby('year')['life_ladder'].agg(['mean', 'std']).reset_index()
@@ -1239,7 +1547,30 @@ def main():
 
                 st.plotly_chart(fig_global, use_container_width=True)
                 
-                
+                # Global trend istatistikleri başlığı
+                st.markdown("""
+                    <div class="chart-container">
+                        <h3 style="
+                            text-align: center;
+                            font-size: 28px;
+                            font-weight: 600;
+                            color: #00c6ff;
+                            margin-top: 2rem;
+                            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            letter-spacing: -0.5px;
+                            padding: 0;
+                        ">📊 Trend İstatistikleri</h3>
+                        <p style="
+                            text-align: center;
+                            color: rgba(255, 255, 255, 0.9);
+                            font-size: 16px;
+                            margin-top: 0.5rem;
+                            max-width: 600px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        ">Global mutluluk trendinin temel istatistiksel göstergeleri</p>
+                    </div>
+                """, unsafe_allow_html=True)
                 
                 # Global trend istatistikleri
                 total_change = global_trend['mean'].iloc[-1] - global_trend['mean'].iloc[0]
@@ -1320,8 +1651,30 @@ def main():
                         unsafe_allow_html=True
                     )
                 
-                # Bölgesel trend analizi
-               
+                # Bölgesel trend analizi başlığı
+                st.markdown("""
+                    <div class="chart-container">
+                        <h3 style="
+                            text-align: center;
+                            font-size: 28px;
+                            font-weight: 600;
+                            color: #00c6ff;
+                            margin-top: 2rem;
+                            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            letter-spacing: -0.5px;
+                            padding: 0;
+                        ">🌍 Bölgesel Trend Analizi</h3>
+                        <p style="
+                            text-align: center;
+                            color: rgba(255, 255, 255, 0.9);
+                            font-size: 16px;
+                            margin-top: 0.5rem;
+                            max-width: 600px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        ">Farklı bölgelerin yıllara göre mutluluk trendlerinin karşılaştırmalı analizi</p>
+                    </div>
+                """, unsafe_allow_html=True)
                 
                 # Bölgelere göre yıllık ortalamalar
                 regional_trend = df.groupby(['year', 'regional_indicator'])['life_ladder'].mean().reset_index()
@@ -1375,7 +1728,25 @@ def main():
                 # Korelasyon analizi
                 st.markdown("""
                     <div class="chart-container">
-                        <h3 class="section-title">🔄 Faktörler Arası Korelasyon</h3>
+                        <h3 style="
+                            text-align: center;
+                            font-size: 28px;
+                            font-weight: 600;
+                            color: #00c6ff;
+                            margin-top: 2rem;
+                            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            letter-spacing: -0.5px;
+                            padding: 0;
+                        ">🔄 Faktörler Arası Korelasyon</h3>
+                        <p style="
+                            text-align: center;
+                            color: rgba(255, 255, 255, 0.9);
+                            font-size: 16px;
+                            margin-top: 0.5rem;
+                            max-width: 600px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        ">Mutluluk faktörleri arasındaki ilişkilerin detaylı analizi</p>
                     </div>
                 """, unsafe_allow_html=True)
                 
@@ -1427,7 +1798,25 @@ def main():
                 # Faktör etki analizi
                 st.markdown("""
                     <div class="chart-container">
-                        <h3 class="section-title">📊 Faktörlerin Mutluluk Üzerindeki Etkisi</h3>
+                        <h3 style="
+                            text-align: center;
+                            font-size: 28px;
+                            font-weight: 600;
+                            color: #00c6ff;
+                            margin-top: 2rem;
+                            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            letter-spacing: -0.5px;
+                            padding: 0;
+                        ">📊 Faktörlerin Mutluluk Üzerindeki Etkisi</h3>
+                        <p style="
+                            text-align: center;
+                            color: rgba(255, 255, 255, 0.9);
+                            font-size: 16px;
+                            margin-top: 0.5rem;
+                            max-width: 600px;
+                            margin-left: auto;
+                            margin-right: auto;
+                        ">Her bir faktörün mutluluk skorları üzerindeki etkisinin incelemesi</p>
                     </div>
                 """, unsafe_allow_html=True)
 
@@ -1512,10 +1901,45 @@ def main():
                     # Korelasyon metriği
                     correlation = df['life_ladder'].corr(df[factor])
                     st.markdown(f"""
-                        <div class="metric-container">
-                            <div class="metric-label">Korelasyon Katsayısı</div>
-                            <div class="metric-value">{correlation:.3f}</div>
-                            <div class="metric-score">R² = {r_value**2:.3f}</div>
+                        <div style="
+                            background: rgba(18, 18, 18, 0.8);
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 12px;
+                            padding: 1rem;
+                            margin: 1rem 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 2rem;
+                        ">
+                            <div style="
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                            ">
+                                <span style="color: rgba(255, 255, 255, 0.7);">Korelasyon Katsayısı:</span>
+                                <span style="
+                                    font-size: 1.2rem;
+                                    font-weight: 600;
+                                    background: linear-gradient(135deg, #00FFE7 0%, #007AFF 50%, #AA00FF 100%);
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                ">{correlation:.3f}</span>
+                            </div>
+                            <div style="
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                            ">
+                                <span style="color: rgba(255, 255, 255, 0.7);">R²:</span>
+                                <span style="
+                                    font-size: 1.2rem;
+                                    font-weight: 600;
+                                    background: linear-gradient(135deg, #00FFE7 0%, #007AFF 50%, #AA00FF 100%);
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                ">{r_value**2:.3f}</span>
+                            </div>
                         </div>
                     """, unsafe_allow_html=True)
                 
